@@ -16,7 +16,7 @@
 <meta property="og:description" content="spark安装教程(yarn模式)配置环境hadoop 版本 hadoop-2.6.0-cdh5.15.1 spark 版本  spark-2.4.8-bin-hadoop2.6 java 版本   jdk1.8.0_65   配置流程 使用yarn模式只需要在一台机器上安装spark即可，本文在namenode节点上所在机器安装spark  yarn配置 修改hadoop的配置文件&#x2F;home&#x2F;h">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-31T02:02:09.201Z">
-<meta property="article:modified_time" content="2021-07-31T12:45:26.488Z">
+<meta property="article:modified_time" content="2021-07-31T13:37:45.324Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -163,7 +163,7 @@
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
 </ol>
 <hr>
-<h2 id="spark配置"><a href="#spark配置" class="headerlink" title="spark配置"></a>spark配置</h2><ol>
+<h3 id="spark配置"><a href="#spark配置" class="headerlink" title="spark配置"></a>spark配置</h3><ol>
 <li><p>修改/home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf/spark-env.sh，添加YARN_CONF_DIR配置</p>
   <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mv spark-env.sh.template spark-env.sh</span><br><span class="line">vi spark-env.sh</span><br><span class="line"><span class="comment">&lt;!-- spark-env.sh中写入--&gt;</span></span><br><span class="line">YARN_CONF_DIR=/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br></pre></td></tr></table></figure>
 </li>
@@ -176,10 +176,10 @@
 </code></pre>
 </li>
 </ol>
-<h2 id="spark配置历史服务"><a href="#spark配置历史服务" class="headerlink" title="spark配置历史服务"></a>spark配置历史服务</h2><ol>
+<h3 id="spark配置历史服务"><a href="#spark配置历史服务" class="headerlink" title="spark配置历史服务"></a>spark配置历史服务</h3><ol>
 <li>修改spark-default.conf.template名称 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf</span><br><span class="line">mv spark-defaults.conf.template spark-defaults.conf</span><br><span class="line"><span class="comment">&lt;!--添加配置 --&gt;</span></span><br><span class="line">YARN_CONF_DIR=/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br><span class="line">export SPARK_HISTORY_OPTS=&quot;</span><br><span class="line"><span class="comment">&lt;!--webUI访问的端口号为18080 --&gt;</span></span><br><span class="line">-Dspark.history.ui.port=18080 </span><br><span class="line"><span class="comment">&lt;!--指定历史服务器日志存储路径,需要和/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop/core-site.xml 中的fs.defaultFS 一致  --&gt;</span></span><br><span class="line">-Dspark.history.fs.logDirectory=hdfs://s200:9000/spark_directory </span><br><span class="line"><span class="comment">&lt;!--指定保存Application历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数 --&gt;</span></span><br><span class="line">-Dspark.history.retainedApplications=20&quot;    </span><br></pre></td></tr></table></figure></li>
 </ol>
-<h2 id="Spark配置Yarn查看历史日志"><a href="#Spark配置Yarn查看历史日志" class="headerlink" title="Spark配置Yarn查看历史日志"></a>Spark配置Yarn查看历史日志</h2><p><code>由于希望从yarn的webUI中点击history,能够跳转到spark的任务管理界面，因此需要配置spark的历史服务</code></p>
+<h3 id="Spark配置Yarn查看历史日志"><a href="#Spark配置Yarn查看历史日志" class="headerlink" title="Spark配置Yarn查看历史日志"></a>Spark配置Yarn查看历史日志</h3><p><code>由于希望从yarn的webUI中点击history,能够跳转到spark的任务管理界面，因此需要配置spark的历史服务</code></p>
 <ol>
 <li><p>修改spark-defaults.conf配置文件</p>
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd     /home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf</span><br><span class="line">mv spark-defaults.conf.template spark-defaults.conf</span><br><span class="line"><span class="comment">&lt;!--  添加如下配置--&gt;</span></span><br><span class="line">spark.eventLog.enabled          true</span><br><span class="line">spark.eventLog.dir              hdfs://s200:9000/spark_directory</span><br><span class="line">spark.yarn.historyServer.address s200:18080</span><br><span class="line">spark.history.ui.port 18080</span><br></pre></td></tr></table></figure></li>
@@ -191,7 +191,7 @@
 <ol start="3">
 <li>查看<code>yarn</code> 的 web-UI<br> 进入<code>yarn</code>的webUI <a target="_blank" rel="noopener" href="http://192.168.231.200:8088/">http://192.168.231.200:8088/</a>  点击history,这样就可以跳转到spark的UI的界面</li>
 </ol>
-<h2 id="Yarn的historyServer配置"><a href="#Yarn的historyServer配置" class="headerlink" title="Yarn的historyServer配置"></a>Yarn的historyServer配置</h2><p>   <code>点击Yarn-web界面的log,发现java.lang.Exception: Unknown container. Container either has not started ...Yarn日志监控</code></p>
+<h3 id="Yarn的HistoryServer配置"><a href="#Yarn的HistoryServer配置" class="headerlink" title="Yarn的HistoryServer配置"></a>Yarn的HistoryServer配置</h3><p>   <code>点击Yarn-web界面的log,发现java.lang.Exception: Unknown container. Container either has not started ...Yarn日志监控</code></p>
 <ol>
 <li>需要开启开启historyserver服务,配置如下</li>
 </ol>
