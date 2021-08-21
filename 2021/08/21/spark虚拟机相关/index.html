@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>java虚拟机 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="- java虚拟机谈谈你对java的理解 平台无关性 GC 语言特性 面向对象 类库 异常处理  java如何实现平台无关性 编译时  运行时   java找不到主类在包下的类，在Java源文件的地方编译后，需要到最外层包的上一级目录下运行，而且类前面需要带包名，以.隔开。 查看字节码java -p 123456789101112131415161718192021222324Compiled f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java虚拟机">
+<meta property="og:url" content="http://example.com/2021/08/21/spark%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="- java虚拟机谈谈你对java的理解 平台无关性 GC 语言特性 面向对象 类库 异常处理  java如何实现平台无关性 编译时  运行时   java找不到主类在包下的类，在Java源文件的地方编译后，需要到最外层包的上一级目录下运行，而且类前面需要带包名，以.隔开。 查看字节码java -p 123456789101112131415161718192021222324Compiled f">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-21T13:51:39.982Z">
+<meta property="article:modified_time" content="2021-08-21T14:14:52.707Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -140,9 +144,7 @@
 </nav>
 
       <div class="body-wrap">
-        
-  
-    <article id="post-spark虚拟机相关" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-spark虚拟机相关" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -151,8 +153,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/21/spark%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/">java虚拟机</a>
+    <h1 class="article-title" itemprop="name">
+      java虚拟机
     </h1>
   
 
@@ -538,158 +540,44 @@
   </div>
 </article>
 
-
-
-
-
-
-
-
-
-
   
-    <article id="post-spark安装教程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="spark安装教程-yarn模式"><a href="#spark安装教程-yarn模式" class="headerlink" title="spark安装教程(yarn模式)"></a>spark安装教程(yarn模式)</h1><h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><p>hadoop 版本 hadoop-2.6.0-cdh5.15.1 <br><br>spark 版本  spark-2.4.8-bin-hadoop2.6 <br><br>java 版本   jdk1.8.0_65 <br></p>
-<hr>
-<h2 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h2><p><code> 使用yarn模式只需要在一台机器上安装spark即可，本文在namenode节点上所在机器安装spark</code></p>
-<ol>
-<li><h3 id="yarn配置"><a href="#yarn配置" class="headerlink" title="yarn配置"></a>yarn配置</h3><p> 修改hadoop的配置文件/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop/yarn-site.xml,添加相关内容</p>
-<p> <code>因为测试环境虚拟机内存较少，防止执行过程进行被意外杀死，做如下配置,这个配置建议加上，之前没有加导致如下报错，后续加了配置之后运行完美</code></p>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.apache.spark.shuffle.FetchFailedException: Failed to connect to s201/192.168.231.201:39838</span><br><span class="line">org.apache.spark.shuffle.FetchFailedException: Failed to connect to s202/192.168.231.202:45209</span><br></pre></td></tr></table></figure>
-
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<hr>
-<h3 id="spark配置"><a href="#spark配置" class="headerlink" title="spark配置"></a>spark配置</h3><ol>
-<li><p>修改/home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf/spark-env.sh，添加YARN_CONF_DIR配置</p>
-  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mv spark-env.sh.template spark-env.sh</span><br><span class="line">vi spark-env.sh</span><br><span class="line"><span class="comment">&lt;!-- spark-env.sh中写入--&gt;</span></span><br><span class="line">YARN_CONF_DIR=/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启动HDFS集群</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/sbin</span><br><span class="line">./start-all.sh</span><br></pre></td></tr></table></figure></li>
-<li><p>提交任务<br><br> <code>注意如果出现报错java.lang.ClassNotFoundException的情况,一定要注意./examples/jars/spark-examples_2.11-2.1.1.jar地址是否正确,以及字符空格相关问题</code></p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/spark-2.4.8-bin-hadoop2.6</span><br><span class="line">bin/spark-submit \</span><br><span class="line">--class org.apache.spark.examples.SparkPi \</span><br><span class="line">--master yarn \</span><br><span class="line">./examples/jars/spark-examples_2.11-2.4.8.jar \</span><br><span class="line">10</span><br></pre></td></tr></table></figure></li>
-<li><p>查看任务<br></p>
-<pre><code> 进入`yarn`的webUI http://192.168.231.200:8088/  点击history,查看历史
-</code></pre>
-</li>
-</ol>
-<h3 id="spark配置历史服务"><a href="#spark配置历史服务" class="headerlink" title="spark配置历史服务"></a>spark配置历史服务</h3><ol>
-<li>修改spark-default.conf.template名称 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf</span><br><span class="line">mv spark-defaults.conf.template spark-defaults.conf</span><br><span class="line"><span class="comment">&lt;!--添加配置 --&gt;</span></span><br><span class="line">YARN_CONF_DIR=/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br><span class="line">export SPARK_HISTORY_OPTS=&quot;</span><br><span class="line"><span class="comment">&lt;!--webUI访问的端口号为18080 --&gt;</span></span><br><span class="line">-Dspark.history.ui.port=18080 </span><br><span class="line"><span class="comment">&lt;!--指定历史服务器日志存储路径,需要和/home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop/core-site.xml 中的fs.defaultFS 一致  --&gt;</span></span><br><span class="line">-Dspark.history.fs.logDirectory=hdfs://s200:9000/spark_directory </span><br><span class="line"><span class="comment">&lt;!--指定保存Application历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数 --&gt;</span></span><br><span class="line">-Dspark.history.retainedApplications=20&quot;    </span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Spark配置Yarn查看历史日志"><a href="#Spark配置Yarn查看历史日志" class="headerlink" title="Spark配置Yarn查看历史日志"></a>Spark配置Yarn查看历史日志</h3><p><code>由于希望从yarn的webUI中点击history,能够跳转到spark的任务管理界面，因此需要配置spark的历史服务</code></p>
-<ol>
-<li><p>修改spark-defaults.conf配置文件</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd     /home/hadoop/app/spark-2.4.8-bin-hadoop2.6/conf</span><br><span class="line">mv spark-defaults.conf.template spark-defaults.conf</span><br><span class="line"><span class="comment">&lt;!--  添加如下配置--&gt;</span></span><br><span class="line">spark.eventLog.enabled          true</span><br><span class="line">spark.eventLog.dir              hdfs://s200:9000/spark_directory</span><br><span class="line">spark.yarn.historyServer.address s200:18080</span><br><span class="line">spark.history.ui.port 18080</span><br></pre></td></tr></table></figure></li>
-<li><p>重启Spark历史服务</p>
-</li>
-</ol>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sbin/stop-history-server.sh</span><br><span class="line">sbin/start-history-server.sh </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>查看<code>yarn</code> 的 web-UI<br> 进入<code>yarn</code>的webUI <a target="_blank" rel="noopener" href="http://192.168.231.200:8088/">http://192.168.231.200:8088/</a>  点击history,这样就可以跳转到spark的UI的界面</li>
-</ol>
-<h3 id="Yarn的HistoryServer配置"><a href="#Yarn的HistoryServer配置" class="headerlink" title="Yarn的HistoryServer配置"></a>Yarn的HistoryServer配置</h3><p>   <code>点击Yarn-web界面的log,发现java.lang.Exception: Unknown container. Container either has not started ...Yarn日志监控</code></p>
-<ol>
-<li>需要开启开启historyserver服务,配置如下</li>
-</ol>
-  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br><span class="line">  vim yarn-site.xml</span><br><span class="line">  <span class="comment">&lt;!--配置数据--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>开启historyserver服务<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/sbin</span><br><span class="line">./mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure></li>
-</ol>
-<hr>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dwt1415403329/article/details/87907930">https://blog.csdn.net/dwt1415403329/article/details/87907930</a></p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2021/07/31/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2021-07-31T02:02:09.201Z" itemprop="datePublished"><i class="icon-clock"></i>2021-07-31</time>
-</a>
-      
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/25/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2021/07/25/hello-world/" class="archive-article-date">
-  	<time datetime="2021-07-25T08:44:20.208Z" itemprop="datePublished"><i class="icon-clock"></i>2021-07-25</time>
-</a>
-      
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
+<nav id="article-nav">
   
   
+    <a href="/2021/07/31/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
 
 
       </div>
@@ -711,8 +599,8 @@
 		fancybox: true,
 		mathjax: false,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
