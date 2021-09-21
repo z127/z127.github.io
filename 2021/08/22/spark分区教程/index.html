@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://example.com">
+  <title>spark RDD总结-spark-2.4.8 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="- spark RDD总结spark RDD 主要特性rdd主要包含了5块部分内容,每部分内容代表rdd的一组特性,由一个函数或者对象构成    序号 内容 对象&#x2F;方法 解释    1 patitions分区 def getPartition A list of patitions, 一个方法,一个partitions列表   2 compute方法 def compute 一个方法,对每个分区进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark RDD总结-spark-2.4.8">
+<meta property="og:url" content="http://example.com/2021/08/22/spark%E5%88%86%E5%8C%BA%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="- spark RDD总结spark RDD 主要特性rdd主要包含了5块部分内容,每部分内容代表rdd的一组特性,由一个函数或者对象构成    序号 内容 对象&#x2F;方法 解释    1 patitions分区 def getPartition A list of patitions, 一个方法,一个partitions列表   2 compute方法 def compute 一个方法,对每个分区进">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-22T05:40:38.971Z">
+<meta property="article:modified_time" content="2021-09-02T13:31:20.314Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="spark安装教程">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/main.css">
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/%E9%9A%8F%E7%AC%94">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/%E9%9A%8F%E7%AC%94">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-spark分区教程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      spark RDD总结-spark-2.4.8
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>-</p>
+<h1 id="spark-RDD总结"><a href="#spark-RDD总结" class="headerlink" title="spark RDD总结"></a>spark RDD总结</h1><h2 id="spark-RDD-主要特性"><a href="#spark-RDD-主要特性" class="headerlink" title="spark RDD 主要特性"></a>spark RDD 主要特性</h2><p><code>rdd主要包含了5块部分内容,每部分内容代表rdd的一组特性,由一个函数或者对象构成</code></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>内容</th>
+<th>对象/方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>patitions分区</td>
+<td>def getPartition</td>
+<td>A list of patitions, 一个方法,一个partitions列表</td>
+</tr>
+<tr>
+<td>2</td>
+<td>compute方法</td>
+<td>def compute</td>
+<td>一个方法,对每个分区进行操作运算的函数,例如map,flatmap等等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>依赖其他RDD的列表</td>
+<td>def getdependencies</td>
+<td>A list of dependencies on other RDDs,依赖其他RDD的列表</td>
+</tr>
+<tr>
+<td>4</td>
+<td>一个对于键值对rdd的partitioner</td>
+<td>paritioner</td>
+<td>Optionally, a Partitioner ofr key-vales RDDs,可选,非必须，对键值对RDD的分区函数，只有RDD的类型是&lt;k,v&gt;形式的分区才有partitioner，其他数据一般默认是hash分区</td>
+</tr>
+<tr>
+<td>5</td>
+<td>一个计算每个split的首选位置列表</td>
+<td>def getPreferredLocations</td>
+<td>Optionally, a list of preferred locations to compute each split on (block locations for  an HDFS file ) ofr key-vales RDDs。可选，计算每个split的优先位置,getPreferrdLocaition记录了rdd的数据的位置，在分布式系统中,如果数据在nodeA位置上，就直接在nodeA位置上启executort进行计算。移动数据不如移动计算，除非资源不够的情况上，如果是HDFS文件的话就是快存储位置</td>
+</tr>
+</tbody></table>
+<h2 id="创建RDD的默认分区规则"><a href="#创建RDD的默认分区规则" class="headerlink" title="创建RDD的默认分区规则"></a>创建RDD的默认分区规则</h2><p><code>使用yarn模式只需要在一台机器上安装spark即可，本文在namenode节点上所在机器安装spark</code></p>
+<h3 id="master设置"><a href="#master设置" class="headerlink" title="master设置"></a>master设置</h3><ol>
+<li>从内存创建fromElements时候,如果设置的master的是*,代表的是cpu的核数，有多少核代表有多少并行度</li>
+<li>从外部文件读取数据，取决于分配给应用的CPU的核数以及2，取最小值,Math（分配给应用的CPU的核数,2）</li>
+</ol>
+<h2 id="transform转换算子"><a href="#transform转换算子" class="headerlink" title="transform转换算子"></a>transform转换算子</h2><ul>
+<li><p>RDD为value类型</p>
+<ol>
+<li>map()一次处理一个元素</li>
+<li>mapPartitions()一次处理一个分区数据,适合批量操作,读取数据库，整个分区创建一个连接，内存资源紧张，批量不一定适合，当内存空间较大时可以使用mapPartitions</li>
+<li>mapPatitionsWithIndex()一次处理一个分区，带分区号，以分区为单位,把分区元素中单位进行映射，单独对某个分区进行处理，其余分区不变</li>
+<li>flatmap将RDD中的每一个元素通过函数生产新的rdd，将一个元素拆分成多个元素，并封装到新的RDD中</li>
+<li>gloom将单个元素转换为整体,将RDD中的元素变成一个数组,并且放置在新的RDD中</li>
+<li>groupby()进行分组功能,按照传入的函数的返回值进行分组。将相同的值放入同一个iterator,中间会有一个shuffle的过程,分组不会导致partition发生变化,但会将相同分组的数据放到同一个分区，有可能会数据倾斜。shuffle一定会落到磁盘上，因此会有效率影响</li>
+<li>sample()采样,不能指定个数</li>
+<li>takeSample()采样,可以指定个数</li>
+<li>distinct()算子,对内部元素进行去除，并将去重元素放回RDD,有shuffle过程,写磁盘了。distinct底层实现 map(x =&gt; (x, null)).reduceByKey((x, y) =&gt; x, numPartitions).map(_._1)</li>
+<li>coalesce()算子,对rdd元素进行重新分区，该算子包括执行shuffle和不执行shuffle两种方式，coalesce默认情况不能扩大分区,默认不执行shuffle,用于缩减分区</li>
+<li>repartition()算子,使用shuffle方式,底层是coalesce,并且shuffle为true</li>
+<li>sortBy()排序,</li>
+<li>pipe()调用脚本</li>
+</ol>
+</li>
+<li><p>RDD为Key-Value类型 <code>通过隐式转换创建PairRDDFunction</code></p>
+<ol>
+<li>partitionby()对RDD元素重新分区,根据分区器重新分区。大部分使用HashPartitioner,一部分使用rangePartitioner</li>
+<li>reduceByKey()将k,v键值对，按照相同的k对value进行聚合,reduceByKey在shuffle之前有combine预聚合的操作，因此不适合算平均值.可以用groupByKey.平常优先用reduceBykey</li>
+<li>groupByKey()按照k进行重新分组,对每个key进行操作，生成一个seq，同时不进行聚合,可以知道分区器或者分区数。需要进行shuffle,groupByKey直接分组没有预聚合的操作，直接shuffle</li>
+<li>aggregateByKey根据key来处理分区内和分区间的逻辑.</li>
+</ol>
+<ul>
+<li>zeroValue(初始值): 给每一个分区中的每一种key一个初始的值</li>
+<li>seqOp(分区内进行计算): 函数用于在每一个分区中用初始值来迭代计算value</li>
+<li>combOp(在分区间计算): 函数用于合并每个分区中的结果</li>
+</ul>
+<ol start="5">
+<li>foldbyKey是aggregatebyKey的简化版本,分区内和分区间的计算逻辑相同,直接用foldbyKey.和ReduceByKey相比差了一个初始值,foldbykey多了一个初始值</li>
+<li>combineByKey </li>
+</ol>
+<ul>
+<li>createCombiner : 根据key,将value数据进行一个结果的转换</li>
+<li>mergeValue : 分区内的计算规则,对同一个分区的相同key进行合并</li>
+<li>mergeCombiners : 分区间的计算规则,将多个分区进行合并</li>
+</ul>
+<ol start="7">
+<li>sortBYKey : 按照key对RDD中的元素进行排序,如果自定义类型，必须实现order接口</li>
+<li>mapValues : 只对Value进行操作,可以对key-value类型的value进行映射map操作</li>
+<li>join : 将多个key对应的value放置在一起,如果匹配不上则丢弃该数据,同时还有其他各种join,类似sql</li>
+<li>cogroup : 在同一个RDD中对key进行聚合操作，先在本RDD中进行聚合，然后在多个RDD中进行聚合操作</li>
+</ol>
+</li>
+</ul>
+<h2 id="Action行动算子"><a href="#Action行动算子" class="headerlink" title="Action行动算子"></a>Action行动算子</h2><p> action算子是触发了整个作业的执行,转换算子都是lazy模式,并不会立即执行</p>
+<ol>
+<li>reduce()聚合，聚合RDD中的所有函数，先聚合分区内数据，然后聚合分区间的数据</li>
+<li>collect()取出所有数据，返回一个集合。按照分区收集,所有数据都会拉取到driver端,慎用,</li>
+<li>foreache()算子,在不同的executor执行，不能确定先后顺序，不会再driver执行。直接在executor端执行</li>
+<li>count() 返回RDD中的元素个数</li>
+<li>first() 返回RDD中的第一个元素</li>
+<li>take() 返回有RDD钱n个元素组成的数组</li>
+<li>takeOrdered() 对RDD排序，返回该RDD前n个元素组成的数组</li>
+<li>aggreagate() 初始值，分区内计算规则，分区间计算规则.</li>
+<li>fold() aggregate 简化，分区内和分区间计算规则一样</li>
+<li>countByKey() 统计每种key出现的次数</li>
+<li>saveAsTextFile(path) 保存成Text文件</li>
+<li>saveAsSequenceFIle(Path) 保存成Sequencefile,key-value类型格式</li>
+<li>saveAsObjectFIle(Path) 序列化成对象保存到文件</li>
+</ol>
+<h2 id="RDD血缘关系"><a href="#RDD血缘关系" class="headerlink" title="RDD血缘关系"></a>RDD血缘关系</h2><ol>
+<li>通过toDebugString方法，来查看血缘关系</li>
+</ol>
+<p>hudi</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2021/08/22/spark%E5%88%86%E5%8C%BA%E6%95%99%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2021-08-22T05:40:38.971Z" itemprop="datePublished"><i class="icon-clock"></i>2021-08-22</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="tag">spark安装教程</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/09/21/Spark%E8%BF%9E%E6%8E%A5ElasticSearch%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/08/21/java%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java虚拟机</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2021 John Doe
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+
+<script src="/./main.js"></script>
+
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 10px;">java虚拟机</a> <a href="/tags/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" style="font-size: 20px;">spark安装教程</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

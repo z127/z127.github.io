@@ -142,7 +142,65 @@
       <div class="body-wrap">
         
   
-    <article id="post-spark虚拟机相关" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Spark连接ElasticSearch问题解决" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Spark3-0-使用域名连接ElasticSearch"><a href="#Spark3-0-使用域名连接ElasticSearch" class="headerlink" title="Spark3.0 使用域名连接ElasticSearch"></a>Spark3.0 使用域名连接ElasticSearch</h1><ol>
+<li><p>需求如下：<br>有一个 https的 ElasticSearch的测试数据集群地址给我,内容形式是HTTPS的. 类似于<br><code>https://abc.def.dasd:443</code>, 网站地址是域名,类似<a target="_blank" rel="noopener" href="http://www.sohu.com这种.希望我把数据写进这个地址/">www.sohu.com这种。希望我把数据写进这个地址</a></p>
+</li>
+<li><p>然后使用spark3 进行连接，后面发现连接不上,报错如下<br> HadoopIllegalArgumentEXception:No data nodex with HTTP-enabled available</p>
+</li>
+<li><p>但是我用自己的临时的es服务器,HTTP协议的，<code>http://xxx:9200</code>没有问题,XXX是IP地址,127.0.0.1。</p>
+</li>
+<li><p>后面发现配置了这个参数,就可以进行连接了，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.set(<span class="string">&quot;es.nodes.wan.only&quot;</span>,<span class="string">&quot;true&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h2><p><code>默认为 false，设置为 true 之后，会关闭节点的自动 discovery，只使用es.nodes声明的节点进行数据读写操作；如果你需要通过域名进行数据访问，则设置该选项为 true，否则请务必设置为 false，可能对性能有影响</code></p>
+<ol start="5">
+<li>这边再把Spark连接ES必要的一些参数再分享一下</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">conf=<span class="keyword">new</span> Sparkconf().setAppName(<span class="string">&quot;XXX&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">conf.set(<span class="string">&quot;ex.index.auto.create&quot;</span>,<span class="string">&quot;true&quot;</span>)</span><br><span class="line">conf.set(<span class="string">&quot;es.nodes.wan.only&quot;</span>,<span class="string">&quot;true&quot;</span>)</span><br><span class="line">.set(<span class="string">&quot;es.nodes&quot;</span>,<span class="string">&quot;https//www.sohu.com&quot;</span>)</span><br><span class="line">.set(<span class="string">&quot;es.port&quot;</span>,<span class="string">&quot;443&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/930337f5902e">https://www.jianshu.com/p/930337f5902e</a></li>
+</ol>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2021/09/21/Spark%E8%BF%9E%E6%8E%A5ElasticSearch%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="archive-article-date">
+  	<time datetime="2021-09-21T12:55:58.711Z" itemprop="datePublished"><i class="icon-clock"></i>2021-09-21</time>
+</a>
+      
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-spark分区教程" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -152,7 +210,170 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/21/spark%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/">java虚拟机</a>
+      <a class="article-title" href="/2021/08/22/spark%E5%88%86%E5%8C%BA%E6%95%99%E7%A8%8B/">spark RDD总结-spark-2.4.8</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>-</p>
+<h1 id="spark-RDD总结"><a href="#spark-RDD总结" class="headerlink" title="spark RDD总结"></a>spark RDD总结</h1><h2 id="spark-RDD-主要特性"><a href="#spark-RDD-主要特性" class="headerlink" title="spark RDD 主要特性"></a>spark RDD 主要特性</h2><p><code>rdd主要包含了5块部分内容,每部分内容代表rdd的一组特性,由一个函数或者对象构成</code></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>内容</th>
+<th>对象/方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>patitions分区</td>
+<td>def getPartition</td>
+<td>A list of patitions, 一个方法,一个partitions列表</td>
+</tr>
+<tr>
+<td>2</td>
+<td>compute方法</td>
+<td>def compute</td>
+<td>一个方法,对每个分区进行操作运算的函数,例如map,flatmap等等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>依赖其他RDD的列表</td>
+<td>def getdependencies</td>
+<td>A list of dependencies on other RDDs,依赖其他RDD的列表</td>
+</tr>
+<tr>
+<td>4</td>
+<td>一个对于键值对rdd的partitioner</td>
+<td>paritioner</td>
+<td>Optionally, a Partitioner ofr key-vales RDDs,可选,非必须，对键值对RDD的分区函数，只有RDD的类型是&lt;k,v&gt;形式的分区才有partitioner，其他数据一般默认是hash分区</td>
+</tr>
+<tr>
+<td>5</td>
+<td>一个计算每个split的首选位置列表</td>
+<td>def getPreferredLocations</td>
+<td>Optionally, a list of preferred locations to compute each split on (block locations for  an HDFS file ) ofr key-vales RDDs。可选，计算每个split的优先位置,getPreferrdLocaition记录了rdd的数据的位置，在分布式系统中,如果数据在nodeA位置上，就直接在nodeA位置上启executort进行计算。移动数据不如移动计算，除非资源不够的情况上，如果是HDFS文件的话就是快存储位置</td>
+</tr>
+</tbody></table>
+<h2 id="创建RDD的默认分区规则"><a href="#创建RDD的默认分区规则" class="headerlink" title="创建RDD的默认分区规则"></a>创建RDD的默认分区规则</h2><p><code>使用yarn模式只需要在一台机器上安装spark即可，本文在namenode节点上所在机器安装spark</code></p>
+<h3 id="master设置"><a href="#master设置" class="headerlink" title="master设置"></a>master设置</h3><ol>
+<li>从内存创建fromElements时候,如果设置的master的是*,代表的是cpu的核数，有多少核代表有多少并行度</li>
+<li>从外部文件读取数据，取决于分配给应用的CPU的核数以及2，取最小值,Math（分配给应用的CPU的核数,2）</li>
+</ol>
+<h2 id="transform转换算子"><a href="#transform转换算子" class="headerlink" title="transform转换算子"></a>transform转换算子</h2><ul>
+<li><p>RDD为value类型</p>
+<ol>
+<li>map()一次处理一个元素</li>
+<li>mapPartitions()一次处理一个分区数据,适合批量操作,读取数据库，整个分区创建一个连接，内存资源紧张，批量不一定适合，当内存空间较大时可以使用mapPartitions</li>
+<li>mapPatitionsWithIndex()一次处理一个分区，带分区号，以分区为单位,把分区元素中单位进行映射，单独对某个分区进行处理，其余分区不变</li>
+<li>flatmap将RDD中的每一个元素通过函数生产新的rdd，将一个元素拆分成多个元素，并封装到新的RDD中</li>
+<li>gloom将单个元素转换为整体,将RDD中的元素变成一个数组,并且放置在新的RDD中</li>
+<li>groupby()进行分组功能,按照传入的函数的返回值进行分组。将相同的值放入同一个iterator,中间会有一个shuffle的过程,分组不会导致partition发生变化,但会将相同分组的数据放到同一个分区，有可能会数据倾斜。shuffle一定会落到磁盘上，因此会有效率影响</li>
+<li>sample()采样,不能指定个数</li>
+<li>takeSample()采样,可以指定个数</li>
+<li>distinct()算子,对内部元素进行去除，并将去重元素放回RDD,有shuffle过程,写磁盘了。distinct底层实现 map(x =&gt; (x, null)).reduceByKey((x, y) =&gt; x, numPartitions).map(_._1)</li>
+<li>coalesce()算子,对rdd元素进行重新分区，该算子包括执行shuffle和不执行shuffle两种方式，coalesce默认情况不能扩大分区,默认不执行shuffle,用于缩减分区</li>
+<li>repartition()算子,使用shuffle方式,底层是coalesce,并且shuffle为true</li>
+<li>sortBy()排序,</li>
+<li>pipe()调用脚本</li>
+</ol>
+</li>
+<li><p>RDD为Key-Value类型 <code>通过隐式转换创建PairRDDFunction</code></p>
+<ol>
+<li>partitionby()对RDD元素重新分区,根据分区器重新分区。大部分使用HashPartitioner,一部分使用rangePartitioner</li>
+<li>reduceByKey()将k,v键值对，按照相同的k对value进行聚合,reduceByKey在shuffle之前有combine预聚合的操作，因此不适合算平均值.可以用groupByKey.平常优先用reduceBykey</li>
+<li>groupByKey()按照k进行重新分组,对每个key进行操作，生成一个seq，同时不进行聚合,可以知道分区器或者分区数。需要进行shuffle,groupByKey直接分组没有预聚合的操作，直接shuffle</li>
+<li>aggregateByKey根据key来处理分区内和分区间的逻辑.</li>
+</ol>
+<ul>
+<li>zeroValue(初始值): 给每一个分区中的每一种key一个初始的值</li>
+<li>seqOp(分区内进行计算): 函数用于在每一个分区中用初始值来迭代计算value</li>
+<li>combOp(在分区间计算): 函数用于合并每个分区中的结果</li>
+</ul>
+<ol start="5">
+<li>foldbyKey是aggregatebyKey的简化版本,分区内和分区间的计算逻辑相同,直接用foldbyKey.和ReduceByKey相比差了一个初始值,foldbykey多了一个初始值</li>
+<li>combineByKey </li>
+</ol>
+<ul>
+<li>createCombiner : 根据key,将value数据进行一个结果的转换</li>
+<li>mergeValue : 分区内的计算规则,对同一个分区的相同key进行合并</li>
+<li>mergeCombiners : 分区间的计算规则,将多个分区进行合并</li>
+</ul>
+<ol start="7">
+<li>sortBYKey : 按照key对RDD中的元素进行排序,如果自定义类型，必须实现order接口</li>
+<li>mapValues : 只对Value进行操作,可以对key-value类型的value进行映射map操作</li>
+<li>join : 将多个key对应的value放置在一起,如果匹配不上则丢弃该数据,同时还有其他各种join,类似sql</li>
+<li>cogroup : 在同一个RDD中对key进行聚合操作，先在本RDD中进行聚合，然后在多个RDD中进行聚合操作</li>
+</ol>
+</li>
+</ul>
+<h2 id="Action行动算子"><a href="#Action行动算子" class="headerlink" title="Action行动算子"></a>Action行动算子</h2><p> action算子是触发了整个作业的执行,转换算子都是lazy模式,并不会立即执行</p>
+<ol>
+<li>reduce()聚合，聚合RDD中的所有函数，先聚合分区内数据，然后聚合分区间的数据</li>
+<li>collect()取出所有数据，返回一个集合。按照分区收集,所有数据都会拉取到driver端,慎用,</li>
+<li>foreache()算子,在不同的executor执行，不能确定先后顺序，不会再driver执行。直接在executor端执行</li>
+<li>count() 返回RDD中的元素个数</li>
+<li>first() 返回RDD中的第一个元素</li>
+<li>take() 返回有RDD钱n个元素组成的数组</li>
+<li>takeOrdered() 对RDD排序，返回该RDD前n个元素组成的数组</li>
+<li>aggreagate() 初始值，分区内计算规则，分区间计算规则.</li>
+<li>fold() aggregate 简化，分区内和分区间计算规则一样</li>
+<li>countByKey() 统计每种key出现的次数</li>
+<li>saveAsTextFile(path) 保存成Text文件</li>
+<li>saveAsSequenceFIle(Path) 保存成Sequencefile,key-value类型格式</li>
+<li>saveAsObjectFIle(Path) 序列化成对象保存到文件</li>
+</ol>
+<h2 id="RDD血缘关系"><a href="#RDD血缘关系" class="headerlink" title="RDD血缘关系"></a>RDD血缘关系</h2><ol>
+<li>通过toDebugString方法，来查看血缘关系</li>
+</ol>
+<p>hudi</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2021/08/22/spark%E5%88%86%E5%8C%BA%E6%95%99%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2021-08-22T05:40:38.971Z" itemprop="datePublished"><i class="icon-clock"></i>2021-08-22</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="tag">spark安装教程</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-java虚拟机相关" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/21/java%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/">java虚拟机</a>
     </h1>
   
 
@@ -527,7 +748,7 @@
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2021/08/21/spark%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/" class="archive-article-date">
+      <a href="/2021/08/21/java%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/" class="archive-article-date">
   	<time datetime="2021-08-21T13:51:39.982Z" itemprop="datePublished"><i class="icon-clock"></i>2021-08-21</time>
 </a>
       
@@ -559,9 +780,20 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/31/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">spark安装教程(yarn模式)</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="spark安装教程-yarn模式"><a href="#spark安装教程-yarn模式" class="headerlink" title="spark安装教程(yarn模式)"></a>spark安装教程(yarn模式)</h1><h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><p>hadoop 版本 hadoop-2.6.0-cdh5.15.1 <br><br>spark 版本  spark-2.4.8-bin-hadoop2.6 <br><br>java 版本   jdk1.8.0_65 <br></p>
+        <p>-</p>
+<h1 id="spark安装教程-yarn模式"><a href="#spark安装教程-yarn模式" class="headerlink" title="spark安装教程(yarn模式)"></a>spark安装教程(yarn模式)</h1><h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><p>hadoop 版本 hadoop-2.6.0-cdh5.15.1 <br><br>spark 版本  spark-2.4.8-bin-hadoop2.6 <br><br>java 版本   jdk1.8.0_65 <br></p>
 <hr>
 <h2 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h2><p><code> 使用yarn模式只需要在一台机器上安装spark即可，本文在namenode节点上所在机器安装spark</code></p>
 <ol>
@@ -569,7 +801,7 @@
 <p> <code>因为测试环境虚拟机内存较少，防止执行过程进行被意外杀死，做如下配置,这个配置建议加上，之前没有加导致如下报错，后续加了配置之后运行完美</code></p>
  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.apache.spark.shuffle.FetchFailedException: Failed to connect to s201/192.168.231.201:39838</span><br><span class="line">org.apache.spark.shuffle.FetchFailedException: Failed to connect to s202/192.168.231.202:45209</span><br></pre></td></tr></table></figure>
 
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span>7788</span><br><span class="line">www.</span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是true --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
 </ol>
 <hr>
 <h3 id="spark配置"><a href="#spark配置" class="headerlink" title="spark配置"></a>spark配置</h3><ol>
@@ -604,7 +836,7 @@
 <ol>
 <li>需要开启开启historyserver服务,配置如下</li>
 </ol>
-  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br><span class="line">  vim yarn-site.xml</span><br><span class="line">  <span class="comment">&lt;!--配置数据--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/etc/hadoop</span><br><span class="line">  vim yarn-site.xml</span><br><span class="line">  <span class="comment">&lt;!--配置数据--&gt;</span> ac86u</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>s200:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>开启historyserver服务<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop/app/hadoop-2.6.0-cdh5.15.1/sbin</span><br><span class="line">./mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure></li>
@@ -620,6 +852,11 @@
   	<time datetime="2021-07-31T02:02:09.201Z" itemprop="datePublished"><i class="icon-clock"></i>2021-07-31</time>
 </a>
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="tag">spark安装教程</a></li></ul>
+	</div>
+
       
 
       <div class="clearfix"></div>
@@ -757,7 +994,7 @@
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 10px;">java虚拟机</a>
+    				<a href="/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 10px;">java虚拟机</a> <a href="/tags/spark%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" style="font-size: 20px;">spark安装教程</a>
     			</div>
     	</section>
     
